@@ -71,6 +71,9 @@ def newrelic_install
         'NR_INSTALL_SILENT' => '1'
       )
     end
+    environment(
+        'PATH'=>"/opt/phpbrew/php/php-7.0.12/bin:#{ENV['PATH']}"
+    )
     action :nothing
     notifies new_resource.service_action, "service[#{new_resource.service_name}]", :delayed if new_resource.service_name
   end
@@ -108,19 +111,20 @@ def enable_module
 end
 
 def enable_module_command
-  cmd = Mixlib::ShellOut.new('php -r "echo PHP_MAJOR_VERSION;"')
-  cmd.run_command
-  php_version_major = cmd.stdout.to_i
-
-  cmd = Mixlib::ShellOut.new('php -r "echo PHP_MINOR_VERSION;"')
-  cmd.run_command
-  php_version_minor = cmd.stdout.to_i
-
-  if php_version_major >= 7
-    'phpenmod'
-  elsif php_version_major == 5 && php_version_minor > 3
-    'php5enmod'
-  end
+  # cmd = Mixlib::ShellOut.new('php -r "echo PHP_MAJOR_VERSION;"')
+  # cmd.run_command
+  # php_version_major = cmd.stdout.to_i
+  #
+  # cmd = Mixlib::ShellOut.new('php -r "echo PHP_MINOR_VERSION;"')
+  # cmd.run_command
+  # php_version_minor = cmd.stdout.to_i
+  #
+  # if php_version_major >= 7
+  #   'phpenmod'
+  # elsif php_version_major == 5 && php_version_minor > 3
+  #   'php5enmod'
+  # end
+  'phpenmod'
 end
 
 def generate_agent_config
